@@ -20,6 +20,10 @@ test('upload, listagem e download de documentos', async (t) => {
     await Promise.all(uploadedIds.map((id) => fs.unlink(path.join(storageDirectory, id))));
   });
 
+  const emptyListResponse = await fetch(`${baseUrl}/documents`);
+  assert.equal(emptyListResponse.status, 200);
+  assert.deepEqual((await emptyListResponse.json()).documents, []);
+
   const emptyUpload = await fetch(`${baseUrl}/upload`, {
     method: 'POST',
     body: new FormData()
@@ -69,6 +73,7 @@ test('upload, listagem e download de documentos', async (t) => {
   assert.equal(downloadResponse.status, 200);
   assert.equal(downloadResponse.headers.get('content-type'), 'application/octet-stream');
   assert.match(downloadResponse.headers.get('content-disposition'), /attachment/);
+  assert.match(downloadResponse.headers.get('content-disposition'), /exemplo\.txt/);
   assert.equal(await downloadResponse.text(), 'conteudo de teste');
 
   const missingDownload = await fetch(`${baseUrl}/documents/not-found/download`);
