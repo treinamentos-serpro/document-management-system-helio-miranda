@@ -9,16 +9,10 @@ function create(file) {
     owner: 'local'
   };
 
-  documentsRepository.create(document, file.filename);
-  return document;
+  return documentsRepository.create(document, file.filename);
 }
 
-function list() {
-  return documentsRepository.findAll();
-}
-
-function getForDownload(id) {
-  return documentsRepository.findForDownload(id);
-}
+const list = documentsRepository.findAll;
+const getForDownload = documentsRepository.findForDownload;
 
 module.exports = { create, list, getForDownload };
